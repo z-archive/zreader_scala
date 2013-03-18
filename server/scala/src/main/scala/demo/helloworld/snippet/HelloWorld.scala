@@ -1,6 +1,8 @@
 package demo.helloworld.snippet
 
+import xml.Elem
+
 class HelloWorld {
-  def howdy = <span>Welcome to helloworld at {new _root_.java.util.Date}</span>
+  def main: Elem = <span>Welcome to helloworld at {new _root_.java.util.Date}</span>
 }
 
