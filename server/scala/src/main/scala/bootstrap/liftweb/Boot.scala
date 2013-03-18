@@ -15,6 +15,10 @@ class Boot {
     // where to search snippet
     LiftRules.addToPackages("sh.oleg.zreader")
 
+    // use HTML5 by default
+    LiftRules.htmlProperties.default.set((r: Req) =>
+      new Html5Properties(r.userAgent))
+
     // Build SiteMap
     val entries = Menu(Loc("Home", List("index"), "Home")) :: Nil
     LiftRules.setSiteMap(SiteMap(entries:_*))
