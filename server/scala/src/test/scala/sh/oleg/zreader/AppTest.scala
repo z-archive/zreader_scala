@@ -1,4 +1,4 @@
-package demo.helloworld
+package sh.oleg.zreader
 
 import _root_.java.io.File
 import _root_.junit.framework._

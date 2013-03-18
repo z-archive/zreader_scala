@@ -9,7 +9,7 @@
   <inceptionYear>2013</inceptionYear>
   <licenses>
     <license>
-      <name>GPLv3</name>
+      <name>GPL version 3</name>
       <url>http://zreader.oleg.sh/</url>
       <distribution>repo</distribution>
     </license>
@@ -19,7 +19,7 @@
     <maven.compiler.source>1.5</maven.compiler.source>
     <maven.compiler.target>1.5</maven.compiler.target>
     <encoding>UTF-8</encoding>
-    <scala.version>2.10.1</scala.version>
+    <scala.version>2.10.0</scala.version>
     <scala.suffix>2.10</scala.suffix>
     <scala-tools.version>1.6.9</scala-tools.version>
     <scala-tools.maven-scala-plugin.version>2.15.0</scala-tools.maven-scala-plugin.version>
@@ -31,6 +31,7 @@
     <junit.version>4.8.1</junit.version>
     <alchim.version>0.7.1</alchim.version>
     <maven-surefire-plugin.version>2.6</maven-surefire-plugin.version>
+    <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
   </properties>
 
   <repositories>
@@ -130,9 +131,10 @@
             </goals>
             <configuration>
               <args>
-                <arg>-make:transitive</arg>
                 <arg>-dependencyfile</arg>
                 <arg>${project.build.directory}/.scala_dependencies</arg>
+                <arg>-unchecked</arg>
+                <arg>-deprecation</arg>
               </args>
             </configuration>
           </execution>
@@ -180,7 +182,16 @@
           </includes>
         </configuration>
       </plugin>
-<!--      <plugin>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${maven.compiler.plugin.version}</version>
+        <configuration>
+            <compilerArgument>-Xlint:all</compilerArgument>
+            <showWarnings>true</showWarnings>
+            <showDeprecation>true</showDeprecation>
+        </configuration>
+      </plugin>
+        <!--      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-eclipse-plugin</artifactId>
         <configuration>
