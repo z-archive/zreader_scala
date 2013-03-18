@@ -32,7 +32,7 @@ class AppTest extends TestCase("app") {
   /**
    * Tests to make sure the project's XML files are well-formed.
    *
-   * Finds every *.html and *.xml file in src/main/webapp (and its
+   * Finds every *.html and *.xml file in src/index/webapp (and its
    * subdirectories) and tests to make sure they are well-formed.
    */
   def testXml() = {
@@ -63,7 +63,7 @@ class AppTest extends TestCase("app") {
       }
     }
 
-    wellFormed(new File("src/main/webapp"))
+    wellFormed(new File("src/index/webapp"))
 
     val numFails = failed.size
     if (numFails > 0) {

@@ -7,7 +7,7 @@ object RunWebApp extends App {
   val context = new WebAppContext()
   context.setServer(server)
   context.setContextPath("/")
-  context.setWar("src/main/webapp")
+  context.setWar("src/index/webapp")
 
   server.addHandler(context)
 
