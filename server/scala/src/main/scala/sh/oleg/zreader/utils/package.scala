@@ -17,6 +17,8 @@ package object utils {
       } catch {
         case e: Exception => LOG.error("Can not close", e)
       }
+    } else {
+      LOG.warn("Close of null resource requested")
     }
   }
 
