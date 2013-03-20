@@ -32,6 +32,7 @@ class Boot {
 
     // Build SiteMap
     val prefix = "Z-Reader"
+    // http://tech.damianhelme.com/twitter-bootstrap-navbar-dropdowns-and-lifts/
     def siteMap() : SiteMap = SiteMap(
       Menu.i("index") / "index",
       Menu.i("login" ) / "login",
