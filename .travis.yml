@@ -1,7 +1,7 @@
 language: scala
 scala:
    - 2.10.1
-script: "mvn -f server/scala/pom.xml test"
+script: "mvn -f pom.xml test"
 notifications:
     email:
         recipients:
