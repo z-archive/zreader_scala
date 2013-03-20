@@ -20,7 +20,7 @@ package sh.oleg.zreader.rss
 import sh.oleg.zreader.rss.AuthModule.{BasicHttpAuth, Credentials}
 import sh.oleg.zreader.rss.EntityModule.{FeedItem, Feed}
 import org.apache.http.impl.conn.PoolingClientConnectionManager
-import org.apache.http.client.methods.HttpGet
+import org.apache.http.client.methods.{HttpRequestBase, HttpGet}
 import org.apache.http.impl.client.{BasicCredentialsProvider, DefaultHttpClient}
 import org.apache.http.client.HttpClient
 import org.apache.http.protocol.BasicHttpContext
@@ -30,6 +30,7 @@ import org.apache.http.HttpStatus
 import java.io.InputStream
 import com.sun.syndication.io.{XmlReader, SyndFeedInput}
 import com.sun.syndication.feed.synd.SyndEntry
+import sh.oleg.zreader.utils.safeClose
 
 trait RSSReader {
 
@@ -42,21 +43,32 @@ trait RSSReader {
   def loadFeed(url: String,
                creds: Option[_ <: Credentials] = None,
                filter: Filter = _ => true): Option[Feed] = {
-    val req = new HttpGet(url)
-    val ctx = new BasicHttpContext()
-    creds foreach {
-      case BasicHttpAuth(uname, pwd) =>
-        val credProvider = new BasicCredentialsProvider
-        credProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(uname, pwd))
-        ctx.setAttribute(ClientContext.CREDS_PROVIDER, credProvider)
-    }
+    var req: HttpRequestBase = null
+    try {
+      req = new HttpGet(url)
+      val ctx = new BasicHttpContext()
+      creds foreach {
+        case BasicHttpAuth(uname, pwd) =>
+          val credProvider = new BasicCredentialsProvider
+          credProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(uname, pwd))
+          ctx.setAttribute(ClientContext.CREDS_PROVIDER, credProvider)
+      }
 
-    val response = httpClient.execute(req, ctx)
-    lazy val content = response.getEntity
-    (response.getStatusLine.getStatusCode match {
-      case HttpStatus.SC_OK => Some(content.getContent)
-      case _ => None
-    }) map parseFeed
+      val response = httpClient.execute(req, ctx)
+      lazy val content = response.getEntity
+      lazy val stream = content.getContent
+      try {
+        (response.getStatusLine.getStatusCode match {
+          case HttpStatus.SC_OK => Some(stream)
+          case _ => None
+        }) map parseFeed
+      } finally {
+        safeClose(stream)
+      }
+    } finally {
+      if (req != null)
+        req.releaseConnection()
+    }
   }
 
   def parseFeed(is: InputStream): Feed = {
