@@ -231,25 +231,46 @@
           <configuration>
             <useFile>false</useFile>
             <disableXmlReport>true</disableXmlReport>
-            <!-- If you have classpath issue like NoDefClassError,... -->
-            <!-- useManifestOnlyJar>false</useManifestOnlyJar -->
+            <includes>
+              <include>**/*Test.*</include>
+              <include>**/*Suite.*</include>
+            </includes>
+          </configuration>
+        </plugin>
+        <plugin>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>${maven.compiler.plugin.version}</version>
+          <configuration>
+            <compilerArgument>-Xlint:all</compilerArgument>
+            <showWarnings>true</showWarnings>
+            <showDeprecation>true</showDeprecation>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>com.mycila.maven-license-plugin</groupId>
+        <artifactId>maven-license-plugin</artifactId>
+        <version>1.10.b1</version>
+        <configuration>
+          <header>LICENSE.txt</header>
+          <strictCheck>false</strictCheck>
+          <mapping>
+            <scala>JAVADOC_STYLE</scala>
+          </mapping>
           <includes>
-            <include>**/*Test.*</include>
-            <include>**/*Suite.*</include>
+            <include>src/main/scala/**/*.scala</include>
+            <include>src/test/scala/**/*.scala</include>
+            <include>src/main/webapp/**/*.jsp</include>
+            <include>src/main/webapp/**/*.html</include>
+            <include>src/main/webapp/**/*.js</include>
+            <include>src/main/webapp/**/*.css</include>
           </includes>
         </configuration>
       </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${maven.compiler.plugin.version}</version>
-        <configuration>
-          <compilerArgument>-Xlint:all</compilerArgument>
-          <showWarnings>true</showWarnings>
-          <showDeprecation>true</showDeprecation>
-        </configuration>
-      </plugin>
+
     </plugins>
-  </pluginManagement>
   </build>
   <reporting>
     <plugins>
@@ -257,9 +278,6 @@
         <groupId>org.scala-tools</groupId>
         <artifactId>maven-scala-plugin</artifactId>
         <version>${scala-tools.maven-scala-plugin.version}</version>
-<!--        <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
-        </configuration>-->
       </plugin>
     </plugins>
   </reporting>
