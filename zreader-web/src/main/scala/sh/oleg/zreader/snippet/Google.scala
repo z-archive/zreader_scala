@@ -18,8 +18,14 @@
 package sh.oleg.zreader.snippet
 
 import sh.oleg.zreader.auth.google.oauth2.Login._
+import sh.oleg.zreader.auth.google.oauth2.Login
 
 object Google {
+
+  import Login.AccessType._
+  import Login.ResponseType._
+  import Login.ApprovalPrompt._
+
   private val snippet = Snippet(
     clientId="855033541488.apps.googleusercontent.com",
     redirectUri="http://localhost:8080/oauth2callback").
