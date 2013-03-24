@@ -42,29 +42,25 @@ package object Login {
     Value
     val email, profile = Value
   }
-  val email = UserInfo.email
-  val profile = UserInfo.profile
+  import UserInfo._
   type UserInfo = UserInfo.Value
 
   object ResponseType extends Enumeration {
     val code, token = Value
   }
-  val code = ResponseType.code
-  val token = ResponseType.token
+  import ResponseType._
   type ResponseType = ResponseType.Value
 
   object ApprovalPrompt extends Enumeration {
     val auto, force = Value
   }
-  val auto = ApprovalPrompt.auto
-  val force = ApprovalPrompt.force
+  import ApprovalPrompt._
   type ApprovalPrompt = ApprovalPrompt.Value
 
   object AccessType extends Enumeration {
     val online, offline = Value
   }
-  val online = AccessType.online
-  val offline = AccessType.offline
+  import AccessType._
   type AccessType = AccessType.Value
 
   case class Snippet(val clientId :       String,
