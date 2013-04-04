@@ -23,16 +23,16 @@
     <scala.version>2.10.1</scala.version>
     <scala.suffix>2.10</scala.suffix>
     <scala-tools.version>1.6.9</scala-tools.version>
-    <scala-tools.maven-scala-plugin.version>2.15.0</scala-tools.maven-scala-plugin.version>
+    <scala-tools.maven-scala-plugin.version>2.15.2</scala-tools.maven-scala-plugin.version>
     <scalatest.version>2.0.M6-SNAP8</scalatest.version>
     <lift.version>2.5-RC2</lift.version>
     <servlet.version>2.5</servlet.version>
     <jetty.version>6.1.26</jetty.version>
-    <slf4j.version>1.7.2</slf4j.version>
-    <junit.version>4.8.1</junit.version>
+    <slf4j.version>1.7.3</slf4j.version>
+    <junit.version>4.11</junit.version>
     <alchim.version>0.7.1</alchim.version>
-    <maven-surefire-plugin.version>2.6</maven-surefire-plugin.version>
-    <maven.compiler.plugin.version>2.3.2</maven.compiler.plugin.version>
+    <maven-surefire-plugin.version>2.14</maven-surefire-plugin.version>
+    <maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
     <rome.version>1.0</rome.version>
     <httpclient.version>4.2.3</httpclient.version>
     <travis.version>1.0.0</travis.version>
@@ -43,7 +43,7 @@
     <repository>
       <id>scala-tools.org</id>
       <name>Scala-Tools Maven2 Repository</name>
-      <url>http://scala-tools.org/repo-releases</url>
+      <url>ttps://oss.sonatype.org/content/groups/scala-tools</url>
     </repository>
     <repository>
       <id>google-api-services</id>
@@ -55,7 +55,7 @@
     <pluginRepository>
       <id>scala-tools.org</id>
       <name>Scala-Tools Maven2 Repository</name>
-      <url>http://scala-tools.org/repo-releases</url>
+      <url>https://oss.sonatype.org/content/groups/scala-tools/</url>
     </pluginRepository>
   </pluginRepositories>
 
