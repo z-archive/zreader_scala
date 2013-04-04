@@ -35,6 +35,7 @@ package bootstrap.liftweb
 import _root_.net.liftweb.http._
 import _root_.net.liftweb.sitemap._
 import Loc._
+import sh.oleg.zreader.rest.Google
 
 /**
   * A class that's instantiated early and run.  It allows the application
@@ -52,9 +53,15 @@ class Boot {
       Menu.i("index") / "index",
       Menu.i("login" ) / "login",
       Menu.i("read") / "read",
-      Menu.i("settings") / "settings"
+      Menu.i("settings") / "settings",
+      Menu.i("singup") / "signup",
+      Menu.i("failed") / "failed"
     )
+    val googleCallback =
     LiftRules.setSiteMapFunc(() => siteMap())
+
+    // OAuth2
+    LiftRules.statelessDispatch.append(Google)
   }
 }
 

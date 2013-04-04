@@ -17,23 +17,10 @@
 
 package sh.oleg.zreader.snippet
 
+import net.liftweb.util.Helpers._
+
 object Google {
-
-  import sh.oleg.zreader.auth.google.oauth2.Login
-  import Login.AccessType._
-  import Login.ResponseType._
-  import Login.ApprovalPrompt._
-  import Login.{Settings, Snippet}
-
-  private val settings = Settings(
-    clientId="855033541488.apps.googleusercontent.com",
-    redirectUri="http://localhost:8080/oauth2callback").
-    withState("/profile").
-    withAccessType(offline).
-    withResponseType(code).
-    withApprovalPrompt(force)
-
-  private val snippet = new Snippet(settings)
-
-  def render = snippet.render
+  import sh.oleg.zreader.auth.google.OAuth2.loginUrl
+  import sh.oleg.zreader.auth.Settings.google
+  def render = "a [href]" #> loginUrl(google)
 }

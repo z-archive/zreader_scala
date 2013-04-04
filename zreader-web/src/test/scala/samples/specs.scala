@@ -41,7 +41,7 @@ import org.specs.runner.{ JUnitSuiteRunner, JUnit }
 /**
  * Sample specification.
  * 
- * This specification can be executed with: scala -cp <your classpath=""> ${package}.SpecsTest
+ * This specification can be executed with: scala -cp <your classpath=""> ${Settings}.SpecsTest
  * Or using maven: mvn test
  *
  * For more information on how to write or run specifications, please visit: http://code.google.com/p/specs.
