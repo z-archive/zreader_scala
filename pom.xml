@@ -43,7 +43,7 @@
     <repository>
       <id>scala-tools.org</id>
       <name>Scala-Tools Maven2 Repository</name>
-      <url>ttps://oss.sonatype.org/content/groups/scala-tools</url>
+      <url>https://oss.sonatype.org/content/groups/scala-tools</url>
     </repository>
     <repository>
       <id>google-api-services</id>
