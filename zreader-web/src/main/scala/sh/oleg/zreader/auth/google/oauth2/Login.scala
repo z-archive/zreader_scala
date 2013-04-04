@@ -18,129 +18,122 @@
 package sh.oleg.zreader.auth.google.oauth2
 
 import scala.Enumeration
-import net.liftweb._
-import sitemap.Loc.Snippet
-import util._
-import Helpers._
-import scala.Enumeration
+import net.liftweb.util.Helpers._
 
 package object Login {
 
-  /**
-   *  scope - space delimited set of permissions the application requests
-   *
-   *  Indicates the Google API access your application is requesting.
-   *  The values passed in this parameter inform the consent page shown to the user.
-   *  There is an inverse relationship between the number of permissions requested
-   *  and the likelihood of obtaining user consent.
-   *
-   *  Every item from list would be translated to
-   *  https://www.googleapis.com/auth/item
-   *
-   */
+  /** Scopes for User Profile Permission */
   object UserInfo extends Enumeration {
-    Value
-    val email, profile = Value
+    /** Gain read-only access to the user's email address. */
+    val email = Value
+    /** Gain read-only access to basic profile information, including a
+     *   - user identifier
+     *   - name
+     *   - profile
+     *   - photo
+     *   - profile URL
+     *   - country
+     *   - language
+     *   - timezone
+     *   - birthdate
+     */
+    val profile = Value
   }
-  import UserInfo._
   type UserInfo = UserInfo.Value
 
+  /** Determines if the Google Authorization Server returns an authorization code, or an opaque access token. */
   object ResponseType extends Enumeration {
-    val code, token = Value
+    /** if your application:
+     *   - requires long-running access to user data through a Google API without the user being present
+     *   - is primarily using server side or installed application components
+     */
+    val code = Value
+    /** if you're writing a JavaScript-heavy application */
+    val token = Value
   }
-  import ResponseType._
   type ResponseType = ResponseType.Value
 
+  /** Indicates if the user should be re-prompted for consent. */
   object ApprovalPrompt extends Enumeration {
-    val auto, force = Value
+    /** given user should only see the consent page for a given set of scopes the first time through the sequence. */
+    val auto = Value
+    /** user sees a consent page even if they have previously given consent to your application for a given set of scopes. */
+    val force = Value
   }
-  import ApprovalPrompt._
   type ApprovalPrompt = ApprovalPrompt.Value
 
+  /** Indicates if your application needs to access a Google API when the user is not present at the browser. */
   object AccessType extends Enumeration {
-    val online, offline = Value
+    val online = Value
+    /**
+     * Use `offline` if your application needs to refresh access tokens when the user is not present at the browser
+     * This will result in your application obtaining a refresh token the first time your application exchanges an authorization code for a user.
+     * */
+    val offline = Value
   }
-  import AccessType._
   type AccessType = AccessType.Value
 
-  case class Snippet(val clientId :       String,
-                     val redirectUri :    String,
-                     val scope :          Set[UserInfo]         = Set(UserInfo.email, UserInfo.profile),
-                     val state :          Option[String]         = None,
-                     val responseType :   Option[ResponseType]   = None,
-                     val accessType :     Option[AccessType]     = None,
-                     val approvalPrompt : Option[ApprovalPrompt] = None) {
+  /**
+   * Settings for use Google OAuth2 (see [[https://developers.google.com/accounts/docs/OAuth2WebServer Using OAuth 2.0 for Web Server Applications]] for details
+   *
+   * @param clientId Indicates the client that is making the request.
+   *                 The value must exactly match the value shown in the [[https://code.google.com/apis/console#access APIs Console]]
+   * @param redirectUri one of your redirect_uris registered at the [[https://code.google.com/apis/console#access APIs Console]]
+   *                    Determines where the response is sent.
+   *                    The value of this parameter must exactly match one of the values registered in the [[https://code.google.com/apis/console#access APIs Console]]
+   *                    (including the http or https schemes, case, and trailing '/').
+   * @param scope Indicates the Google API access your application is requesting.
+   *              The values passed in this parameter inform the consent page shown to the user.
+   *              There is an inverse relationship between the number of permissions requested
+   *              and the likelihood of obtaining user consent.
+   * @param state This optional parameter indicates any state which may be useful to your application upon receipt of the response.
+   *              The Google Authorization Server roundtrips this parameter, so your application receives the same value it sent.
+   *              Possible uses include redirecting the user to the correct resource in your site, nonces,
+   *              and cross-site-request-forgery mitigations.
+   * @param responseType see [[sh.oleg.zreader.auth.google.oauth2.Login.ResponseType]]
+   * @param accessType see [[sh.oleg.zreader.auth.google.oauth2.Login.AccessType]]
+   * @param approvalPrompt see [[sh.oleg.zreader.auth.google.oauth2.Login.ApprovalPrompt]]
+   */
+  case class Settings(clientId: String,
+                      redirectUri: String,
+                      scope: Set[UserInfo] = Set(UserInfo.email, UserInfo.profile),
+                      state: Option[String] = None,
+                      responseType: Option[ResponseType] = None,
+                      accessType: Option[AccessType] = None,
+                      approvalPrompt: Option[ApprovalPrompt] = None) {
+    def addUserInfo(ui: UserInfo) = this.copy(scope = this.scope + ui)
+    def delUserIfo(ui: UserInfo) = this.copy(scope = this.scope - ui)
+    def withState(state: String) = this.copy(state = Some(state))
+    def withResponseType(value: ResponseType) = this.copy(responseType = Some(value))
+    def withAccessType(value: AccessType) = this.copy(accessType = Some(value))
+    def withApprovalPrompt(value: ApprovalPrompt) = this.copy(approvalPrompt = Some(value))
+  }
+
+  /**
+   * The [[http://liftweb.net/ Lift]] [[http://stable.simply.liftweb.net/#toc-Section-7.1 Snippet]] for [[https://developers.google.com/accounts/docs/OAuth2WebServer#formingtheurl Forming the URL]]
+   *
+   * @param settings see [[sh.oleg.zreader.auth.google.oauth2.Login.Settings]]
+   */
+  case class Snippet(settings: Settings) {
     def render = {
-      def always(name : String)(value : String) =
+      def always(name: String)(value: String) =
         Some((name, value))
-      def option(name : String)(value : Option[String]) =
-        value.map{case v => (name, v)}
-      def enum[T <: Enumeration](name : String)(value : Option[T#Value]) =
-        value.map{case v => (name, v.toString)}
-      def string(name : String)(s : String) =
+      def option(name: String)(value: Option[String]) =
+        value.map { case v => (name, v) }
+      def enum[T <: Enumeration](name: String)(value: Option[T#Value]) =
+        value.map { case v => (name, v.toString) }
+      def string(name: String)(s: String) =
         if (s.isEmpty) None else Some(name, s)
       "a [href]" #> appendParams("https://accounts.google.com/o/oauth2/auth",
         List(
-          string("scope")          (scope.map("https://www.googleapis.com/auth/userinfo." + _.toString).mkString(" ")),
-          option("state")          (state),
-          always("redirect_uri")   (redirectUri),
-          enum("response_type")    (responseType),
-          always("client_id")      (clientId),
-          enum("access_type")      (accessType),
-          enum("approval_prompt")  (approvalPrompt)
+          string("scope")(settings.scope.map("https://www.googleapis.com/auth/userinfo." + _.toString).mkString(" ")),
+          option("state")(settings.state),
+          always("redirect_uri")(settings.redirectUri),
+          enum("response_type")(settings.responseType),
+          always("client_id")(settings.clientId),
+          enum("access_type")(settings.accessType),
+          enum("approval_prompt")(settings.approvalPrompt)
         ).flatten)
     }
-    def addScope(ui : UserInfo.Value) = this.copy(scope=this.scope+ui)
-    def delScope(ui : UserInfo.Value) = this.copy(scope=this.scope-ui)
-    def withState(s :String) =                         this.copy(state=Some(s))
-    def withResponseType(e : ResponseType.Value) =     this.copy(responseType=Some(e))
-    def withAccessType(e : AccessType.Value) =         this.copy(accessType=Some(e))
-    def withApprovalPrompt(e : ApprovalPrompt.Value) = this.copy(approvalPrompt=Some(e))
   }
-
-  /**
-   * state - any string
-   *
-   * This optional parameter indicates any state which may be useful to your application upon receipt of the response.
-   * The Google Authorization Server roundtrips this parameter, so your application receives the same value it sent.
-   * Possible uses include redirecting the user to the correct resource in your site, nonces,
-   * and cross-site-request-forgery mitigations.
-   */
-
-  /**
-   * redirect_uri - one of your redirect_uris registered at the APIs Console at https://code.google.com/apis/console#access
-   *
-   * Determines where the response is sent.
-   * The value of this parameter must exactly match one of the values registered in the APIs Console
-   * (including the http or https schemes, case, and trailing '/').
-   */
-
-  /**
-   * response_type - code or token
-   *
-   * Determines if the Google Authorization Server returns an authorization code, or an opaque access token.
-   */
-  /**
-   * client_id - the client_id obtained from the APIs Console
-   *
-   * Indicates the client that is making the request.
-   * The value passed in this parameter must exactly match the value shown in the APIs Console at https://code.google.com/apis/console#access
-   */
-
-  /**
-   * access_type - online or offline
-   *
-   * Indicates if your application needs to access a Google API when the user is not present at the browser.
-   * This parameter defaults to online.
-   * If your application needs to refresh access tokens when the user is not present at the browser, then use offline.
-   * This will result in your application obtaining a refresh token the first time your application exchanges an authorization code for a user.
-   */
-  /**
-   * approval_prompt - force or auto
-   *
-   * Indicates if the user should be re-prompted for consent.
-   * The default is auto, so a given user should only see the consent page for a given set of scopes the first time through the sequence.
-   * If the value is force, then the user sees a consent page even if they have previously given consent to your application for a given set of scopes.
-   *
-   */
 }
