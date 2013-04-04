@@ -1,7 +1,6 @@
-language: scala
-scala:
-   - 2.10.1
-script: "mvn -f pom.xml test"
+language: erlang
+otp_release:
+   - R16B
 notifications:
     email:
         recipients:
