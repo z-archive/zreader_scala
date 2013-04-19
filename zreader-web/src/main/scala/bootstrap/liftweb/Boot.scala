@@ -36,6 +36,7 @@ import _root_.net.liftweb.http._
 import _root_.net.liftweb.sitemap._
 import Loc._
 import sh.oleg.zreader.rest.Google
+import net.liftweb.common.Full
 
 /**
   * A class that's instantiated early and run.  It allows the application
@@ -49,15 +50,18 @@ class Boot {
     // Build SiteMap
     val prefix = "Z-Reader"
     // http://tech.damianhelme.com/twitter-bootstrap-navbar-dropdowns-and-lifts/
+    case class ParamInfo(theParam: String)
+    val menu = Menu.param[ParamInfo]("Param", "Param", s => Full(ParamInfo(s)), pi => pi.theParam) / "param"
     def siteMap() : SiteMap = SiteMap(
-      Menu.i("index") / "index",
-      Menu.i("login" ) / "login",
-      Menu.i("read") / "read",
-      Menu.i("settings") / "settings",
-      Menu.i("singup") / "signup",
-      Menu.i("failed") / "failed"
+      Menu.i("Index") / "index",
+      Menu.i("Login" ) / "login",
+      Menu.i("Read") / "read",
+      Menu.i("Settings") / "settings",
+      Menu.i("Signup") / "signup",
+      menu,
+      Menu.i("Failed") / "failed"
     )
-    val googleCallback =
+    //val googleCallback =
     LiftRules.setSiteMapFunc(() => siteMap())
 
     // OAuth2

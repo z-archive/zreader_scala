@@ -17,10 +17,13 @@
 
 package sh.oleg.zreader.snippet
 
+/*import net.liftweb._
+import util._
+import Helpers._
+import http._*/
 import net.liftweb.util.Helpers._
+import net.liftweb.http._
 
-object Google {
-  import sh.oleg.zreader.auth.google.OAuth2.singUpURL
-  import sh.oleg.zreader.auth.Settings.google
-  def render = "a [href]" #> singUpURL(google)(Some("/profile"))
+object Signup {
+  def render = "#code" #> S.param("code")
 }
